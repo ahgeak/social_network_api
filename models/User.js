@@ -7,26 +7,48 @@ const userSchema = new Schema(
         username: {
             type: String,
             required: true,
-            unique: true, // Check docs on this one
-            trimmed: true, //Check docs how to trim
+            unique: true,
+            trimmed: true,
         },
         email: {
             type: String,
             required: true,
-            unique: true, // double check
-            // ** TODO: Add - Must match a valid email address (look into Mongoose's matching validation)
+            unique: true,
+            // validate will use the regex for validiating an email address and return a message if the test value is false.
+            validate: {
+                validator: function (value) {
+                  return /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(value);
+                },
+                message: 'Invalid email address',
+              },
         },
-        thoughts: {
-            // ** TODO: Array of _id values referencing the Thought model
-        },
-        friends: {
-            // ** TODO: Array of _id values referencing the User model (self-reference)
+        // Array of _id values referencing the Thought model
+        thoughts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref:'Thought'
+            },
+        ],
+        // Array of _id values referencing the User model (self-reference)
+        friends: [
+            {
+                type: Schema.Types.ObjectId,
+                ref:'User'
+            },
+        ],
+    },
+    {
+        toJSON: {
+            virtuals: true,
         },
     },
-    // ** TODO: toJSON 
 );
 
-// TODO: Schema Settings - Create a virtual called friendCount that retrieves the length of the user's friends array field on query.
+// Virtual property `friendCount` that retrieves the length of the user's friends array field on query.
+userSchema.virtual('friendCount')
+  .get(function () {
+    return this.friends.length;
+  });
 
 const User = model('user', userSchema);
 
