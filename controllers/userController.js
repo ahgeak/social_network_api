@@ -78,11 +78,45 @@ module.exports = {
             res.status(500).json(err);
         }
     },
+    // /api/users/:userId/friends/:friendId
+
+    // POST to add a new friend to a user's friend list
+    async addFriend(req, res) {
+        console.log('You are adding a new friend.');
+        console.log(req.body);
+
+        try {
+            const user = await User.findOneAndUpdate(
+                { _id: req.params.userId },
+                { $addToSet: { friends: req.body } },
+                { runValidators: true, new: true }
+            );
+
+            if (!user) {
+                return res.status(404).json({ message: 'No user found with this ID.' });
+            }
+
+            res.json(user);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+    // DELETE to remove a friend from a user's friend list
+    async deleteFriend(req, res) {
+        try {
+            const user = await User.findOneAndUpdate(
+                { _id: req.params.userId },
+                { $pull: { friend: {friendId: req.params.friendId } } },
+                { runValidators: true, new: trusted }
+            );
+
+            if (!user) {
+                return res.status(404).json({ message: 'No user found with this ID.' });
+            }
+
+            res.json(user);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
 };
-
-// TODO: 
-// /api/users/:userId/friends/:friendId
-
-// POST to add a new friend to a user's friend list
-
-// DELETE to remove a friend from a user's friend list
