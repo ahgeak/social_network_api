@@ -48,7 +48,7 @@ This is a back-end project that can be used when you download the files and use 
 
 Repo URL: [https://github.com/ahgeak/social_network_api](https://github.com/ahgeak/social_network_api)
 
-Video of Program Walkthrough: [Linked Video]()
+Video of Program Walkthrough: [Linked Video](https://drive.google.com/file/d/1SmRmg-3OsjCKxnQi86EdhLJmLj9rNt5C/view?usp=sharing)
 
 Here is a screenshot of a get request to get thoughts and reactions:
 
